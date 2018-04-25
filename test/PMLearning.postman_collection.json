@@ -1,0 +1,114 @@
+{
+	"info": {
+		"_postman_id": "9acec806-1ed4-409c-a396-4b66d72e29b5",
+		"name": "PMLearning",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Post Request",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "bd5855a4-8142-4443-ae13-fb54dd5e0c5e",
+						"type": "text/javascript",
+						"exec": [
+							"var companies = pm.environment.get(\"companies\");",
+							"if ( !companies)",
+							"{",
+							"    companies = [\"Rediff\",\"Microsoft\",\"Amazon\"];",
+							"}",
+							"var currentCmpny = companies.shift();",
+							"pm.environment.set(\"companies\",companies);",
+							"pm.environment.set(\"company\",currentCmpny);",
+							"console.log(currentCmpny);"
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "542e4d34-5116-4e1d-92dc-9d938fc48939",
+						"type": "text/javascript",
+						"exec": [
+							"var companies = pm.environment.get(\"companies\");",
+							"if (companies && companies.length > 0){",
+							"    postman.setNextRequest(\"http://requestbin.fullcontact.com/1fycnls1\");",
+							"} else {",
+							"    postman.setNextRequest(null);",
+							"}",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 600ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(400);",
+							"});",
+							"",
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"{{company}}\"\n}"
+				},
+				"url": {
+					"raw": "example.com",
+					"host": [
+						"example",
+						"com"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Request",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "21345fa4-7c29-49ee-b5d4-e59da937771f",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Successful GET request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "example.com",
+					"host": [
+						"example",
+						"com"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
